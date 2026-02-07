@@ -1,7 +1,18 @@
 import math
+"""
+This program demonstrates a 3D coordinate system using tuples.
+It creates fixed positions, parses coordinate strings into tuples,
+calculates 3D Euclidean distances from the origin, and handles invalid input
+gracefully.It also demonstrates tuple unpacking for accessing x, y, z
+coordinates.
+"""
 
 
-def parsing_tuple(str):
+def parsing_tuple(str: str) -> list[int]:
+    """
+    Parses a comma-separated string into a list of integers.
+    Returns None if parsing fails.
+    """
     list_string = (str.split(",", 3))
     list_numbers = []
     try:
@@ -29,7 +40,7 @@ tuple2 = tuple(parsing_tuple(str1))
 print(f"Parsed position: {tuple2}")
 distance2 = math.sqrt((tuple2[0] - 0)**2 + (tuple2[1] - 0)**2
                       + (tuple2[2] - 0)**2)
-print(f"Distance between (0, 0, 0) and {tuple1}: {distance2:.2f}")
+print(f"Distance between (0, 0, 0) and {tuple2}: {distance2:.2f}")
 print()
 str2 = "abc,def,ghi"
 print(f'Parsing coordinates: "{str2}"')
