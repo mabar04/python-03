@@ -1,64 +1,84 @@
 import sys
 
 
-def max_value(inventory):
-    max_number = max(inventory.values())
-    return max_number
+def max_item(inventory: dict[dict[str: int]]):
+    max_qty = max(item["quantity"] for item in inventory.values())
+    for name, data in inventory.items():
+        if data["quantity"] == max_qty:
+            return name, max_qty
 
 
-def min_value(inventory):
-    min_number = min(inventory.values())
-    return min_number
+def min_item(inventory):
+    min_qty = min(item["quantity"] for item in inventory.values())
+    for name, data in inventory.items():
+        if data["quantity"] == min_qty:
+            return name, min_qty
+
+
+def categorie_items(Inventory):
+    categorie = {"Abundant": {}, "Moderate": {}, "Scarce": {}}
+    for key, value in Inventory.items():
+        if value["quantity"] >= 10:
+            categorie["Abundant"].update({key: value["quantity"]})
+        elif value["quantity"] >= 5:
+            categorie["Moderate"].update({key: value["quantity"]})
+        else:
+            categorie["Scarce"].update({key: value["quantity"]})
+    return categorie
+
+
+def restrock_needed(Inventory):
+    restrock = []
+    for key, value in Inventory.items():
+        if value["quantity"] <= 1:
+            restrock += [key]
+    return restrock
+
+
+def get_key(Inventory_items):
+    return Inventory_items[1]["quantity"]
 
 
 if len(sys.argv) > 2:
     Inventory = {}
     print("=== Inventory System Analysis ===")
-    i = 1
-    while i < len(sys.argv):
-        splited_arg = sys.argv[i].split(":", 2)
-        Inventory[splited_arg[0]] = int(splited_arg[1])
-        i = i + 1
-    total = 0
-    for value in Inventory.values():
-        total += value
+    for arg in sys.argv[1:]:
+        try:
+            name, qty = arg.split(":")
+            qty = int(qty)
+            Inventory.update({name: {"quantity": qty}})
+        except ValueError:
+            continue
+    total = sum(item["quantity"] for item in Inventory.values())
     print(f"Total items in inventory: {total}")
     print(f"Unique item types: {len((Inventory))}\n")
     print("=== Current Inventory ===")
-    for key, value in Inventory.items():
-        print(f"{key}: {value} units ({(value / total * 100):.1f}%) ")
+    for item, value in sorted(Inventory.items(), key=get_key, reverse=True):
+        # Understand how the sorted work + how the functio not have a
+        # parameter and works
+        qty = value["quantity"]
+        print(f"{item}: {qty} unites ({(qty / total * 100):.1f}%)")
     print("")
     print("=== Inventory Statistics ===")
-    maximum = max_value(Inventory)
-    minimun = min_value(Inventory)
-
-    for key, value in Inventory.items():
-        if value == maximum:
-            print(f"Most abundant: {key} ({value} ", end="")
-            if value >= 2:
-                print("units)")
-    for key, value in Inventory.items():
-        if value == minimun:
-            print(f"Least abundant: {key} ({value} ", end="")
-            if value >= 2:
-                print("units)")
-            else:
-                print("unit)")
-            break
-    print("")
+    name_max, max = max_item(Inventory)
+    name_min, min = min_item(Inventory)
+    print(f"Most abundant: {name_max} ({max} units)")
+    print(f"Least abundant: {name_min} ({min} units)")
+    print()
     print("=== Item Categories ===")
-    print("Moderate :", {"potion": 5})
-    print("Scarce   :", {"sword": 1, "shield": 2, "armor": 3, "helmet": 1})
+    categorie = categorie_items(Inventory)
+    for key, value in categorie.items():
+        if value:
+            print(f"{key}: {value}")
     print("\n=== Management Suggestions ===")
-    print("Restock needed:", ["sword", "helmet"])
+    restrock = restrock_needed(Inventory)
+    print(f"Restock needed: {restrock}")
     print("\n=== Dictionary Properties Demo ===")
-    keys = [key for key in Inventory.keys()]
-    print(f"Dictionary keys: {keys}")
-    values = [value for value in Inventory.values()]
+    print(f"Dictionary keys: {list(Inventory.keys())}")
+    values = []
+    for value in Inventory.values():
+        values += [value["quantity"]]
     print(f"Dictionary values: {values}")
-    print("Sample lookup - 'sword' in inventory: ", end="")
-    for key in keys:
-        if key == "sword":
-            print("True")
-            break
-        print("false")
+    check_item = "sword"
+    print(f"Sample lookup - '{check_item}' "
+          f"in inventory: {check_item in Inventory}")

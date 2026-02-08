@@ -1,20 +1,20 @@
-def Processing_data():
+
+def data_stream():
     players = {
-        1: {
-           "name": "Alice",
-           "level": 5
-        },
-        2: {
-            "name": "bob",
-            "level": 12
-        },
-        3: {
-            "name": "charlie",
-            "level": 8
-        }
+        "alice": 5,
+        "bob": 12,
+        "charlie": 8,
+        "david": 15,
+        "emma": 3
     }
+
     events = ["killed monster", "found treasure", "leveled up"]
-    
+
+    player_names = list(players.keys())
+    name = player_names[i % len(player_names)]
+    level = players[name]
+    event = events[i % len(events)]
+    yield name, level, event
 
 
 def Fibonacci(n: int):
@@ -44,10 +44,10 @@ def prime():
 print("=== Game Data Stream Processor ===\n")
 print("Processing 1000 game events...\n")
 i = 0
-for player in Processing_data():
-    print(f"Event {i}: Player {player["name"]} (level {player["level"]}"
-          f" {player["event"]})")
-    i = i + 1
+while i < 3:
+    player, level, event = data_stream()
+    print(f"Event {i}: Player {player} (level {level}) {event}")
+    i += 1
 print("...\n")
 print("=== Stream Analytics ===")
 print("Total events processed : 1000")
@@ -58,9 +58,11 @@ print("Memory usage:Constant (streaming)")
 print("Processing time: 0.045 seconds")
 print("\n=== Generator Demonstration ===")
 print("Fibonacci sequence (first 10): ", end="")
+j = 0
 for i in Fibonacci(10):
     print(f"{i}", end="")
-    if i < 34:
+    j += 1
+    if j < 10:
         print(", ", end="")
 print()
 print("Prime numbers (first 5): ", end="")

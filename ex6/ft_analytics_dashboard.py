@@ -40,7 +40,7 @@ if __name__ == "__main__":
                   'low': sum(1 for p in players_dict.values()
                              if p['score'] < 2000)
                   }
-    print(f"Score categories: {{'high': {categories["high"]}, "
+    print(F"Score categories: {{'high': {categories["high"]}, "
           f"'medium': {categories["medium"]},"
           f"'low': {categories["low"]}}}")
     i = 1
