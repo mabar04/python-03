@@ -1,21 +1,51 @@
 import sys
 
 
-def max_item(inventory: dict[dict[str: int]]):
+def max_item(inventory: dict[dict[str: int]]) -> tuple[str, int]:
+    """
+    Find the item with the highest quantity in the inventory.
+    Args:
+        inventory: Dictionary mapping item names to a dictionary containing
+        'quantity'.
+    Returns:
+        A tuple containing the name of the item and its quantity.
+    """
     max_qty = max(item["quantity"] for item in inventory.values())
     for name, data in inventory.items():
         if data["quantity"] == max_qty:
             return name, max_qty
 
 
-def min_item(inventory):
+def min_item(inventory: dict[dict[str: int]]) -> tuple[str, int]:
+    """
+    Find the item with the lowest quantity in the inventory.
+    Args:
+        inventory: Dictionary mapping item names to a dictionary containing
+        'quantity'.
+    Returns:
+        A tuple containing the name of the item and its quantity.
+    """
     min_qty = min(item["quantity"] for item in inventory.values())
     for name, data in inventory.items():
         if data["quantity"] == min_qty:
             return name, min_qty
 
 
-def categorie_items(Inventory):
+def categorie_items(Inventory:
+                    dict[dict[str: int]]) -> dict[str, dict[str, int]]:
+    """
+    Categorize items based on their quantity.
+    Categories:
+        - 'Abundant': quantity >= 10
+        - 'Moderate': quantity >= 5 and < 10
+        - 'Scarce': quantity < 5
+    Args:
+        inventory: Dictionary mapping item names to a dictionary containing
+        'quantity'.
+    Returns:
+        Dictionary with categories as keys and sub-dictionaries of item names
+        and quantities.
+    """
     categorie = {"Abundant": {}, "Moderate": {}, "Scarce": {}}
     for key, value in Inventory.items():
         if value["quantity"] >= 10:
@@ -27,7 +57,15 @@ def categorie_items(Inventory):
     return categorie
 
 
-def restrock_needed(Inventory):
+def restrock_needed(Inventory: dict[dict[str: int]]) -> list[str]:
+    """
+    Identify items that need restocking (quantity <= 1).
+    Args:
+        inventory: Dictionary mapping item names to a dictionary containing
+        'quantity'.
+    Returns:
+        List of item names that need to be restocked.
+    """
     restrock = []
     for key, value in Inventory.items():
         if value["quantity"] <= 1:
@@ -35,7 +73,10 @@ def restrock_needed(Inventory):
     return restrock
 
 
-def get_key(Inventory_items):
+def get_key(Inventory_items: tuple[str, dict[str, int]]) -> int:
+    """
+    Helper function for sorting inventory items by quantity.
+    """
     return Inventory_items[1]["quantity"]
 
 
